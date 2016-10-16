@@ -1,43 +1,31 @@
 package org.firstinspires.ftc.teamcode;
 
-import android.os.Looper;
-
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.lasarobotics.vision.android.Cameras;
 import org.lasarobotics.vision.ftc.resq.Beacon;
 import org.lasarobotics.vision.image.Drawing;
-import org.lasarobotics.vision.opmode.ManualVisionOpMode;
 import org.lasarobotics.vision.opmode.TestableVisionOpMode;
-import org.lasarobotics.vision.opmode.VisionOpMode;
-import org.lasarobotics.vision.opmode.extensions.CameraControlExtension;
-import org.lasarobotics.vision.util.ScreenOrientation;
 import org.lasarobotics.vision.util.color.Color;
 import org.lasarobotics.vision.util.color.ColorGRAY;
 import org.lasarobotics.vision.util.color.ColorRGBA;
-import org.opencv.core.Mat;
 import org.opencv.core.Point;
+import org.lasarobotics.vision.opmode.extensions.CameraControlExtension;
+import org.lasarobotics.vision.util.ScreenOrientation;
+import org.opencv.core.Mat;
 import org.opencv.core.Size;
 
-import static org.lasarobotics.vision.opmode.VisionOpMode.beacon;
-
 /**
- * Created by darwin on 10/9/16.
- *
- * This is the out-of-the box OpMode for the VisionOpMode.
- *
- * It displays the image after the calculations done by the computer.
- *
- * I have yet to find the proper place for the documentation
+ * Vision OpMode run by the Camera Test Activity
+ * Use TestableVisionOpModes in testing apps ONLY (but you can easily convert between opmodes just by changingt t
  */
-@Autonomous(name="FTCvision",group = "null")
-public class FTCvision_test extends VisionOpMode {
+public class FTCVisionV2 extends TestableVisionOpMode {
 
     @Override
     public void init() {
         super.init();
+
         /**
          * Set the camera used for detection
          * PRIMARY = Front-facing, larger camera
@@ -56,9 +44,9 @@ public class FTCvision_test extends VisionOpMode {
          * Enable extensions. Use what you need.
          * If you turn on the BEACON extension, it's best to turn on ROTATION too.
          */
-        enableExtension(VisionOpMode.Extensions.BEACON);         //Beacon detection
-        enableExtension(VisionOpMode.Extensions.ROTATION);       //Automatic screen rotation correction
-        enableExtension(VisionOpMode.Extensions.CAMERA_CONTROL); //Manual camera control
+        enableExtension(Extensions.BEACON);         //Beacon detection
+        enableExtension(Extensions.ROTATION);       //Automatic screen rotation correction
+        enableExtension(Extensions.CAMERA_CONTROL); //Manual camera control
 
         /**
          * Set the beacon analysis method
@@ -94,6 +82,8 @@ public class FTCvision_test extends VisionOpMode {
         rotation.setIsUsingSecondaryCamera(false);
         rotation.disableAutoRotate();
         rotation.setActivityOrientationFixed(ScreenOrientation.LANDSCAPE);
+        //rotation.setZeroOrientation(ScreenOrientation.LANDSCAPE_REVERSE);
+
         /**
          * Set camera control extension preferences
          *
@@ -107,7 +97,6 @@ public class FTCvision_test extends VisionOpMode {
     @Override
     public void loop() {
         super.loop();
-
     }
 
     @Override
@@ -169,7 +158,7 @@ public class FTCvision_test extends VisionOpMode {
         Drawing.drawText(rgba, beacon.getAnalysisMethod().toString() + " Analysis",
                 new Point(width - 300, 40), 1.0f, new ColorRGBA("#FFC107"));
 
-        /* Display rotation sensor compensation */
+        //Display rotation sensor compensation
         Drawing.drawText(rgba, "Rot: " + rotation.getRotationCompensationAngle()
                 + " (" + sensors.getScreenOrientation() + ")", new Point(0, 50), 1.0f, new ColorRGBA("#ffffff"), Drawing.Anchor.BOTTOMLEFT); //"#2196F3"
 

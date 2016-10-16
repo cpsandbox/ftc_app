@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -19,6 +20,7 @@ import static org.firstinspires.ftc.teamcode.R.layout.servo;
  */
 
 @TeleOp(name="Basic Tank Drive!", group="Noramal_Opmode")
+@Disabled
 
 public class TankD_Odistance extends OpMode {
     DcMotor left;                   //Both of our DC motors

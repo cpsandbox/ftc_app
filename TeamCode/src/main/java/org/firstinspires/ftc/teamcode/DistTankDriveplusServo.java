@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.ColorSensor;
@@ -13,6 +14,8 @@ import static android.R.attr.left;
  */
 
 @TeleOp(name="Basic Tank Drive!", group="Noramal_Opmode")
+@Disabled
+
 
 public class DistTankDriveplusServo extends OpMode {
     DcMotor left;
@@ -37,7 +40,7 @@ public class DistTankDriveplusServo extends OpMode {
 
         becon_pusher.setPosition(gamepad1.left_trigger);
 
-        telemetry.addData("Color_sensor",sensor
+        telemetry.addData("Color_sensor",sensor);
 
 
     }
