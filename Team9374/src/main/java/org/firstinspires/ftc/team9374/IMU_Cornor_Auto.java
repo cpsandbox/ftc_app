@@ -49,7 +49,7 @@ public class IMU_Cornor_Auto extends LinearOpMode{
         DcMotor shooter_l;
         DcMotor shooter_r;
 
-        Servo center;
+        //Servo center;
 
         public ElapsedTime runTime = new ElapsedTime();
 
@@ -76,7 +76,7 @@ public class IMU_Cornor_Auto extends LinearOpMode{
             shooter_r = hardwareMap.dcMotor.get("Eng3-left");
             shooter_l = hardwareMap.dcMotor.get("Eng3-right");
 
-            center = hardwareMap.servo.get("Ser1-center");
+            //center = hardwareMap.servo.get("Ser1-center");
 
             imu = hardwareMap.get(BNO055IMU.class, "imu");
 
