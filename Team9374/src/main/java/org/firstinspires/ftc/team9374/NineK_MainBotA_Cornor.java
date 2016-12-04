@@ -17,7 +17,10 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  *      THE CENTER OF THE ROBOT
  *      IS ALLIGNED TO THE CENTER OF THE
  *      TILE FROM THE CORNOR
+<<<<<<< HEAD
  *
+=======
+>>>>>>> e920dc6351b8ece876e59ccd20e250de48f454da
  */
 @Autonomous(name = "9374_AUTONOMOUS_CORNOR_VOTREX",group = "null")
 
@@ -69,6 +72,7 @@ public class NineK_MainBotA_Cornor extends LinearOpMode {
         right_b.setDirection(DcMotorSimple.Direction.REVERSE);
 
         //shooter_r.setDirection(DcMotorSimple.Direction.REVERSE);
+        shooter_r.setDirection(DcMotorSimple.Direction.REVERSE);
 
         runTime.reset();
 

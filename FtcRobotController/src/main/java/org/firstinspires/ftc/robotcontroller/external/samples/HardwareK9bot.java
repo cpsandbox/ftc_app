@@ -44,7 +44,6 @@ public class HardwareK9bot
 
     /* Constructor */
     public HardwareK9bot() {
-
     }
 
     /* Initialize standard Hardware interfaces */

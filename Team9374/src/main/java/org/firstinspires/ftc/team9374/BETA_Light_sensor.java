@@ -14,25 +14,19 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  */
 
 //  must be set up such that center of the robot is aligned with the square directly to the left.
-@Autonomous(name = "Light sensor positioner", group = "null")
+@Autonomous(name = "Beta_light sensor")
+
 public class BETA_Light_sensor extends LinearOpMode {
-    //Defining robot
+
     Hardware9374 robot = new Hardware9374();
+    public void runOpMode() throws InterruptedException{
+        robot.init(hardwareMap);
 
-      public void runOpMode() throws InterruptedException  {  
+        robot.moveToPosition(61,.7);
 
-        //Initing robot
-        robot.init(hardwareMap);  
+        robot.Turn(90,1,false);
 
-        super.waitForStart();
+        robot.moveToPosition(67,.7);
 
-         //Begginning of instruction 
-
-        robot.moveToPosition(61,.7);   
-
-        robot.Turn(90,.7,false);  
-
-        robot.moveToPosition(67,.7);  
     }
-
 }

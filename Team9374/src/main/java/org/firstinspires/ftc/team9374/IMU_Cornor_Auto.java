@@ -37,7 +37,7 @@ public class IMU_Cornor_Auto extends LinearOpMode{
         BNO055IMU imu;
 
         // State used for updating telemetry
-        Orientation angles;
+        float angles;
         Acceleration gravity;
 
         //Robot Hardware
@@ -142,84 +142,21 @@ public class IMU_Cornor_Auto extends LinearOpMode{
             // Loop and update the dashboard
             while (opModeIsActive()) {
                 //Getting our heading into telemetry
-                angles   = imu.getAngularOrientation().toAxesReference(AxesReference.INTRINSIC).toAxesOrder(AxesOrder.ZYX);
-                telemetry.addData("Degrees (In heading)",null);
+                angles   = AngleUnit.normalizeDegrees(imu.getAngularOrientation().toAxesReference(AxesReference.INTRINSIC).toAxesOrder(AxesOrder.ZXY).firstAngle);
+                telemetry.addData("Degrees (In heading)",angles);
                 //----------------------------------------------------------------------------------
                 //Moving twords the cornor vortex
                 //----------------------------------------------------------------------------------
-                moveClicksForInches(110, .5);
+                //moveClicksForInches(110, .5);
 
-                Turn(90,.7, false);
+                //Turn(90,.7, false);
 
-                moveClicksForInches(20,.5);
+                //moveClicksForInches(20,.5);
 
 
             }
         }
-
-        //----------------------------------------------------------------------------------------------
-        // Telemetry Configuration
-        //----------------------------------------------------------------------------------------------
-        /*
-        void composeTelemetry() {
-
-            // At the beginning of each telemetry update, grab a bunch of data
-            // from the IMU that we will then display in separate lines.
-            telemetry.addAction(new Runnable() { @Override public void run()
-            {
-                // Acquiring the angles is relatively expensive; we don't want
-                // to do that in each of the three items that need that info, as that's
-                // three times the necessary expense.
-                angles   = imu.getAngularOrientation().toAxesReference(AxesReference.INTRINSIC).toAxesOrder(AxesOrder.ZYX);
-                gravity  = imu.getGravity();
-            }
-            });
-
-            telemetry.addLine()
-                    .addData("status", new Func<String>() {
-                        @Override public String value() {
-                            return imu.getSystemStatus().toShortString();
-                        }
-                    })
-                    .addData("calib", new Func<String>() {
-                        @Override public String value() {
-                            return imu.getCalibrationStatus().toString();
-                        }
-                    });
-
-            telemetry.addLine()
-                    .addData("heading", new Func<String>() {
-                        @Override public String value() {
-                            return formatAngle(angles.angleUnit, angles.firstAngle);
-                        }
-                    })
-                    .addData("roll", new Func<String>() {
-                        @Override public String value() {
-                            return formatAngle(angles.angleUnit, angles.secondAngle);
-                        }
-                    })
-                    .addData("pitch", new Func<String>() {
-                        @Override public String value() {
-                            return formatAngle(angles.angleUnit, angles.thirdAngle);
-                        }
-                    });
-
-            telemetry.addLine()
-                    .addData("grvty", new Func<String>() {
-                        @Override public String value() {
-                            return gravity.toString();
-                        }
-                    })
-                    .addData("mag", new Func<String>() {
-                        @Override public String value() {
-                            return String.format(Locale.getDefault(), "%.3f",
-                                    Math.sqrt(gravity.xAccel*gravity.xAccel
-                                            + gravity.yAccel*gravity.yAccel
-                                            + gravity.zAccel*gravity.zAccel));
-                        }
-                    });
-        }
-        */
+        //imu.getAngularOrientation().toAxesReference(AxesReference.INTRINSIC).toAxesOrder(AxesOrder.ZYX)
         //----------------------------------------------------------------------------------------------
         // Formatting
         //----------------------------------------------------------------------------------------------
@@ -231,14 +168,20 @@ public class IMU_Cornor_Auto extends LinearOpMode{
         String formatDegrees(double degrees){
             return String.format(Locale.getDefault(), "%.1f", AngleUnit.DEGREES.normalize(degrees));
         }
-        public void Turn(int degrees, double speed,boolean direction) {
+        public void Turn(double target, double speed,boolean direction) {
             /*
             I am acutally really proud of myself for this method.
             This method moves the robot a certain amount of degrees.
             //True  = Counter-Clockwise
             //False = Clockwise
             */
-            ticks = (degrees*13);   //In reality is is 13.44, but
+            //-------------------------
+            //          Keep in mind, angles = current heading
+            //                        target = target heading
+
+            if (angles < 0) {
+
+            }
             //everything needs to be in integers.
 
             //This took a lot of time to come up with one number
@@ -269,12 +212,6 @@ public class IMU_Cornor_Auto extends LinearOpMode{
             }
         }
         public void Beta_Turn(int target, double speed, boolean directon){
-            int degrees;
-
-            angles = imu.getAngularOrientation().toAxesReference(AxesReference.INTRINSIC).toAxesOrder(AxesOrder.ZYX);
-            degrees = Integer.parseInt(formatAngle(angles.angleUnit, angles.firstAngle));
-
-
         }
         public int calcClicksForInches(double distanceInInches) {
             //Currently there are 1120 different positions on any given wheel

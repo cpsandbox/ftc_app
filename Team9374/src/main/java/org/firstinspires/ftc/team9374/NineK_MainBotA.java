@@ -22,16 +22,12 @@ public class NineK_MainBotA extends LinearOpMode {
     Hardware9374 robot = new Hardware9374();
 
 
-    public void runOpMode() throws InterruptedException  {
-        robot.init(hardwareMap);
-        robot.elevator.setPower(0);
-        robot.runTime.reset();
+    public void runOpMode() throws InterruptedException {
 
-        //left.setDirection(DcMotorSimple.Direction.REVERSE);//Or .FORWARD
-        telemetry.addData("I am at runOpMode",null);
+        robot.init(hardwareMap);
         super.waitForStart();
 
-        while(super.opModeIsActive()) {
+        while (super.opModeIsActive()) {
             /*
 
             //Dont quite know what this is?
@@ -77,5 +73,5 @@ public class NineK_MainBotA extends LinearOpMode {
             break;
         }
 
-        }
+    }
 }

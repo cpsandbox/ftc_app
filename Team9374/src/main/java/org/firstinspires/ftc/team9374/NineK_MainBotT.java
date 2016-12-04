@@ -13,21 +13,22 @@ import com.qualcomm.robotcore.util.Range;
 /*
  * Created by darwin on 10/29/16.
  */
-@TeleOp(name = "9KT_Beta", group = "null")
+@TeleOp(name = "9KT", group = "null")
 //@Disabled0
 public class NineK_MainBotT extends OpMode {
+    //Drivin
     Hardware9374 robot = new Hardware9374();
+    public ElapsedTime runTime = new ElapsedTime();
 
     public void init()  {
         //Driving motors
-        robot.init(hardwareMap);
+    robot.init(hardwareMap);
 
     }
 
     @Override
     public void loop() {
         //All Driving code//
-
         //Driver
 
         double lStickY = gamepad1.left_stick_y;
@@ -87,12 +88,6 @@ public class NineK_MainBotT extends OpMode {
             robot.shooter_r.setPower(0);
         }
 
-
-
-
-        telemetry.addData("Right Bumper",rBumper);
-        telemetry.addData("Left Bumper", lBumper);
-        telemetry.addData("Total Runtime:", robot.runTime);
 
 
 

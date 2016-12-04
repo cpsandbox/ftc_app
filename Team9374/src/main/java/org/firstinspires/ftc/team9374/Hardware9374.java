@@ -2,6 +2,7 @@ package org.firstinspires.ftc.team9374;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
+import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -36,6 +37,8 @@ public class Hardware9374 {
 
     CRServo elevator;
 
+    ColorSensor CSensor;
+
     //Controller vaibles
     double lStickY;
     double lStickX;
@@ -48,6 +51,8 @@ public class Hardware9374 {
 
     final double wheelDiameterInInches = 2.5;
     final int tpr = 1120;
+    final double wheelCorrection = 0;
+    //Not yet defined, will be.
 
     int ticks;
 
@@ -69,6 +74,8 @@ public class Hardware9374 {
         shooter_l = hardwareMap.dcMotor.get("Eng3-right");
 
         elevator = hardwareMap.crservo.get("Ser1-center");
+
+        CSensor = hardwareMap.colorSensor.get("Col1-right");
 
         //This might not be true for all motors on the right side
         right_b.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -121,7 +128,7 @@ public class Hardware9374 {
         }
         while (true) {
             //telemetry.addData("CurrentPos",left_f.getCurrentPosition());
-            //Might need to find a way to get that done;.
+            //Might need to find a way to get that done.
             if ((left_f.getCurrentPosition() - ticks) < 5){
                 setALLpower(0);
                 resetEncoders();
@@ -149,7 +156,65 @@ public class Hardware9374 {
             }
         }
     }
+    public void translate(boolean direction, double power, int inches){
+        //Currently not finished, need to confirm with camden.
+        //-------------------------
+        //True  = Left
+        //False = Right
+        //-------------------------
+        /*
+        Diagram!!!
+          |  _ ________ _   ^
+          | | |        | |  |
+          v |_|        |_|  |
+              |        |
+              |        |
+          ^  _|        |_
+          | | |        | |  |
+          | |_|________|_|  |
+                            v
 
+         So, to go left the two wheels on the left turn in
+         and the two wheels on the right turn outward
+         as shown.
+
+         For right it is almost the exact same, except the right wheels turn in and the left wheels turn out
+
+          ^  _ ________ _
+          | | |        | | |
+          | |_|        |_| |
+              |        |   v
+              |        |
+             _|        |_  ^
+          | | |        | | |
+          | |_|________|_| |
+          v
+
+         */
+        //Acutall code will continue
+
+        setALLposition(calcClicksForInches(inches));
+        if (direction) {
+            // If ( left ),
+            left_f.setPower(-power);
+            left_b.setPower(power);
+            right_f.setPower(power);
+            right_b.setPower(-power);
+        } else if (!direction) {
+            left_f.setPower(power);
+            left_b.setPower(-power);
+            right_f.setPower(-power);
+            right_b.setPower(power);
+        }
+        while (true) {
+            if (left_f.getCurrentPosition() > calcClicksForInches(inches)){
+                resetEncoders();
+                break;
+            }
+        }
+
+
+    }
     public void setALLpower(double power){
         left_b.setPower(power);
         left_f.setPower(power);
@@ -169,5 +234,11 @@ public class Hardware9374 {
         right_b.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         right_f.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
+        left_b.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        left_f.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        right_b.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        right_f.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
     }
+
 }

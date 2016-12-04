@@ -6,6 +6,11 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
 /*
+=======
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
+
+/**
+>>>>>>> e920dc6351b8ece876e59ccd20e250de48f454da
  * Created by darwin on 9/20/16.
  */
 
@@ -21,10 +26,12 @@ public class Distance_Function_TankD extends OpMode {
         right = hardwareMap.dcMotor.get("Motor-right");
     }
 
-    @Override             //method in opmode that I am implementing
-    public void loop() {  //Do this thing over and over again
+
+    @Override
+    public void loop() {
         float leftDC = gamepad1.left_stick_y;
         float rightDC =  gamepad1.right_stick_y;
+
 
         left.setPower(leftDC);
         right.setPower(rightDC);
@@ -34,4 +41,3 @@ public class Distance_Function_TankD extends OpMode {
 
     }
 }
-
