@@ -43,7 +43,8 @@ public class NineK_MainBotA extends LinearOpMode {
         }
 
         //move 55 inches
-        int clicks = robot.calcClicksForInches(55);
+        int clicks = robot.calcClicksForInches(34.375);
+        //Changed to a wacky num because 55/1.6 due to wheel faisco
         //Go,go,go,go
         robot.setALLposition(-clicks);
         robot.setALLpower(-.5);

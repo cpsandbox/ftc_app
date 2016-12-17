@@ -55,7 +55,7 @@ public class Hardware9374 {
     double LBpower;
     double RBpower;
 
-    final double wheelDiameterInInches = 2.5;
+    final double wheelDiameterInInches = 4;
     final int tpr = 1120;
     final double wheelCorrection = 0;
     //Not yet defined, will be.
@@ -154,7 +154,8 @@ public class Hardware9374 {
 
 
 
-    public void Turn(int change, double speed) {
+    public void Turn(int THeading, double speed) {
+        //Stands for THeading
         //EX: change = 90 and speed is 0.
         /*
         I am acutally really proud of myself for this method.
@@ -176,7 +177,7 @@ public class Hardware9374 {
 
         double heading = getcurrentheading(); //38
 
-        double target  = heading + change;
+        double target  = heading + THeading;
 
         //Making shure that the target is not over 360
         if (target > 360) {
@@ -208,7 +209,7 @@ public class Hardware9374 {
         int clicks = (int) (revlutions * tpr); //This is a pretty big number, gonna be in the 1,000's
         return clicks; //The position to set the wheels to.
     }
-    public void moveToPosition(int distanceInIN,double power){
+    public void moveToPosition(double distanceInIN,double power){
         setALLposition(calcClicksForInches(distanceInIN));
         setALLpower(power);
         while (true){
@@ -315,6 +316,12 @@ public class Hardware9374 {
         left_f.setMode(mode);
         right_b.setMode(mode);
         right_f.setMode(mode);
+    }
+    public void waitNSeconds(int secondsToWait){
+        double startTime = runTime.time();
+        while (runTime.time() - startTime< secondsToWait){
+
+        }
     }
 
 }

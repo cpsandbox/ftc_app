@@ -1,33 +1,18 @@
 package org.firstinspires.ftc.team9374;
 
-import com.qualcomm.hardware.adafruit.BNO055IMU;
-import com.qualcomm.hardware.adafruit.JustLoggingAccelerationIntegrator;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.robotcontroller.external.samples.SensorAdafruitIMU;
-import org.firstinspires.ftc.robotcore.external.Func;
-import org.firstinspires.ftc.robotcore.external.navigation.Acceleration;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
-import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
-import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
-import org.firstinspires.ftc.robotcore.external.navigation.Position;
-import org.firstinspires.ftc.robotcore.external.navigation.Velocity;
 
 import java.util.Locale;
 
 /**
  * Created by darwin on 11/21/16.
  */
-@Autonomous(name = "Ninek_MainBotA_Cornor_Vortex")
-@Disabled
-public class IMU_Cornor_Auto extends LinearOpMode{
+@Autonomous(name = "Ninek_MainBotA_Cornor_Vortex_B")
+public class NineK_MainBotA_Cornor_B extends LinearOpMode{
 
         // Uncomment this to add to the opmode list
 
@@ -80,16 +65,18 @@ public class IMU_Cornor_Auto extends LinearOpMode{
                     break;
                 }
                 */
+                //Changed to a wacky num because 55/1.6 due to wheel faisco
 
-                robot.moveToPosition(15,.5);
-
-                robot.resetEncoders();
-
-                robot.Turn(95,.3);
+                robot.moveToPosition(12.5,.5);
 
                 robot.resetEncoders();
 
-                robot.moveToPosition(10,.5);
+                robot.Turn(290,.3);
+
+                robot.resetEncoders();
+                //Changed to a wacky num because 55/1.6 due to wheel faisco
+
+                robot.moveToPosition(6.25,.5);
                 //robot.Turn(180,.4);
 
                 break;
