@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.team9374;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 /**
@@ -11,6 +12,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 //  must be set up such that center of the robot is aligned with the square directly to the left.
 @Autonomous(name = "Beacon_AutoV2", group = "null")
+@Disabled
 public class BETA_Light_sensorV2 extends LinearOpMode {
     //Defining robot
     Hardware9374 robot = new Hardware9374();
@@ -21,7 +23,7 @@ public class BETA_Light_sensorV2 extends LinearOpMode {
         super.waitForStart();
 
         robot.moveToPosition(61,.4);
-        robot.Turn(90,.4,false);
+        //robot.Turn(90,.4,false);
         // What we have got next is a custom move command.
         // We are going forward untill we see both colors greather than 3
         // This will make shure we are in the middle.

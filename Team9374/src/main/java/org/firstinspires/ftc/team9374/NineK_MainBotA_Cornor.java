@@ -1,11 +1,23 @@
 package org.firstinspires.ftc.team9374;
 
+import com.qualcomm.hardware.adafruit.BNO055IMU;
+import com.qualcomm.hardware.adafruit.JustLoggingAccelerationIntegrator;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
+
+import org.firstinspires.ftc.robotcore.external.navigation.Acceleration;
+
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+
+import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
+import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
+
 
 /*
  * Created by darwin on 10/29/16.
@@ -17,182 +29,321 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  *      THE CENTER OF THE ROBOT
  *      IS ALLIGNED TO THE CENTER OF THE
  *      TILE FROM THE CORNOR
-<<<<<<< HEAD
- *
-=======
->>>>>>> e920dc6351b8ece876e59ccd20e250de48f454da
- */
-@Autonomous(name = "9374_AUTONOMOUS_CORNOR_VOTREX",group = "null")
 
+ */
+@Autonomous(name = "Ninek_MainBotA_Cornor_Vortex",group = "null")
+@Disabled
 public class NineK_MainBotA_Cornor extends LinearOpMode {
 
-    DcMotor left_f;
-    DcMotor right_f;
-    DcMotor left_b;
-    DcMotor right_b;
+    /**
+     * Created by SuperSneasel12 on 11/21/16.
+     */
+        BNO055IMU imu;
 
-    DcMotor shooter_l;
-    DcMotor shooter_r;
+        // State used for updating telemetry
+        Orientation angles;
+        Acceleration gravity;
 
-    Servo center;
 
-    public ElapsedTime runTime = new ElapsedTime();
+        private static final int TICS_PER_REV = 1120;
 
-    final int tpr = 1120;   //Ticks per Rotation
-    final int wheelDiameterInInches = 3;// All of out wheels will be inches this year
-    int ticks;  //To Be used for later. Just have to define it here
-    // Please note that this needs to be changed for any wheel size that we decide to use
+        private double WHEEL_DIAMETER = 4;
 
-    public void runOpMode() throws InterruptedException  {
-        left_f = hardwareMap.dcMotor.get("Eng1-left");
-        right_f = hardwareMap.dcMotor.get("Eng1-right");
-        left_b = hardwareMap.dcMotor.get("Eng2-left");
-        right_b = hardwareMap.dcMotor.get("Eng2-right");
+        DcMotor left_f;
+        DcMotor right_f;
+        DcMotor left_b;
+        DcMotor right_b;
 
-        shooter_r = hardwareMap.dcMotor.get("Eng3-left");
-        shooter_l = hardwareMap.dcMotor.get("Eng3-right");
+        DcMotor shooter_l;
+        DcMotor shooter_r;
 
-        center = hardwareMap.servo.get("Ser1-center");
-        left_f.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        right_f.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        left_b.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        right_b.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        CRServo shooterServo;
 
-        left_b.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        right_f.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        right_b.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        left_f.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
-        left_b.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        right_f.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        right_b.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        left_f.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-        right_f.setDirection(DcMotorSimple.Direction.REVERSE);
-        right_b.setDirection(DcMotorSimple.Direction.REVERSE);
+        public ElapsedTime runtime = new ElapsedTime();
 
-        //shooter_r.setDirection(DcMotorSimple.Direction.REVERSE);
-        shooter_r.setDirection(DcMotorSimple.Direction.REVERSE);
 
-        runTime.reset();
+        final double kServoNullPosition = 0; //Null position, or base
+        final double kServoRange = -1;
+        final double kShooterEnginePower = 1;
 
-        //left.setDirection(DcMotorSimple.Direction.REVERSE);//Or .FORWARD
-        telemetry.addData("I am at runOpMode",null);
-        super.waitForStart();
+        private int ticsForInches(double inches) {
+            return (int) ((inches * TICS_PER_REV) / (Math.PI * WHEEL_DIAMETER));
+        }
 
-        while(super.opModeIsActive()) {
-            //This needs to be called at the begginning of every program.
-            while (true) {
-                shooter_l.setPower(1);
-                shooter_r.setPower(1);
-                if (runTime.time() > 5) {
-                    center.setPosition(.2);
-                    if (runTime.time() > 10) {
+
+        // 4 Inches
+        public void initmybot() {
+            //Front Motors
+            left_f = hardwareMap.dcMotor.get("Eng1-left");
+            right_f = hardwareMap.dcMotor.get("Eng1-right");
+
+            //Back Motors
+            left_b = hardwareMap.dcMotor.get("Eng2-left");
+            right_b = hardwareMap.dcMotor.get("Eng2-right");
+
+
+            //Shooter Motors
+            shooter_l = hardwareMap.dcMotor.get("Eng3-left");
+            shooter_r = hardwareMap.dcMotor.get("Eng3-right");
+
+            //servos
+            shooterServo = hardwareMap.crservo.get("Ser1-center");
+
+            //Running with encoder
+            shooter_r.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            right_f.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            right_b.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            shooter_l.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            left_f.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            left_b.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            //stopping with Encoder
+            right_f.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            right_b.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            left_f.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            left_b.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            //setting direction
+            right_f.setDirection(DcMotorSimple.Direction.FORWARD);
+            right_b.setDirection(DcMotorSimple.Direction.FORWARD);
+
+            BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
+            parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
+            parameters.accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
+            parameters.calibrationDataFile = "AdafruitIMUCalibration.json"; // see the calibration sample opmode
+            parameters.loggingEnabled = true;
+            parameters.loggingTag = "IMU";
+            parameters.accelerationIntegrationAlgorithm = new JustLoggingAccelerationIntegrator();
+
+            // Retrieve and initialize the IMU. We expect the IMU to be attached to an I2C port
+            // on a Core Device Interface Module, configured to be a sensor of type "AdaFruit IMU",
+            // and named "imu".
+            imu = hardwareMap.get(BNO055IMU.class, "imu");
+            imu.initialize(parameters);
+
+            runtime.reset();
+        }
+
+        public void waitNSeconds(int secondsToWait) {
+            double startTime = runtime.time();
+            while (runtime.time() - startTime < secondsToWait) {
+
+            }
+        }
+
+        @Override
+        public void runOpMode() throws InterruptedException {
+            initmybot();
+            waitForStart();
+            // Shoot Loaded Balls
+            shooter_r.setPower(kShooterEnginePower);
+            shooter_l.setPower(kShooterEnginePower);
+
+            for (int i = 1; i <= 3; i++) {
+                waitNSeconds(1);
+                shooterServo.setPower(1);
+                waitNSeconds(1);
+                shooterServo.setPower(kServoNullPosition);
+
+                int ticks = ticsForInches(12);
+
+                //Run to posiiton
+                right_f.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                right_b.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                left_f.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                left_b.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                //Our ticks for the motors
+
+                right_f.setTargetPosition(-ticks);
+                right_b.setTargetPosition(-ticks);
+                left_f.setTargetPosition(-ticks);
+                left_b.setTargetPosition(-ticks);
+
+
+                //Waiting for robot to reach position.
+                while (super.opModeIsActive()) {
+                    telemetry.addData("Ticks:", right_f.getCurrentPosition());
+                    telemetry.addData("Target:", right_f.getTargetPosition());
+                    telemetry.addData("Time elapsed:", runtime);
+                    telemetry.update();
+                    if (runtime.time() > 10) {
+                        right_f.setPower(.5);
+                        right_b.setPower(.5);
+                        left_f.setPower(.5);
+                        left_b.setPower(.5);
+                    }
+
+                    if (left_f.getCurrentPosition() > ticks) {
                         break;
                     }
+
+                }// end while
+
+                right_f.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                right_b.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                left_f.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                left_b.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+                turnimu(-90);
+
+                //////end turning//
+                right_f.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                right_b.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                left_f.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                left_b.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+                ticks = ticsForInches(24);
+
+                //Run to posiiton
+                right_f.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                right_b.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                left_f.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                left_b.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                //Our ticks for the motors
+
+                right_f.setTargetPosition(ticks);
+                right_b.setTargetPosition(ticks);
+                left_f.setTargetPosition(ticks);
+                left_b.setTargetPosition(ticks);
+
+
+                //Waiting for robot to reach position.
+                while (super.opModeIsActive()) {
+                    telemetry.addData("Ticks:", right_f.getCurrentPosition());
+                    telemetry.addData("Target:", right_f.getTargetPosition());
+                    telemetry.addData("Time elapsed:", runtime);
+                    telemetry.update();
+                    if (runtime.time() > 10) {
+                        right_f.setPower(-.5);
+                        right_b.setPower(-.5);
+                        left_f.setPower(-.5);
+                        left_b.setPower(-.5);
+                    }
+
+                    if (left_f.getCurrentPosition() > ticks) {
+                        break;
+                    }
+
+                }// end while
+
+                right_f.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                right_b.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                left_f.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                left_b.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                //Everything neatly organised by function
+                turnimu(-45);
+
+                //////end turning//
+
+
+                ///////end turn 45
+                right_f.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                right_b.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                left_f.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                left_b.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                //
+                ticks = ticsForInches(24);
+
+                //Run to posiiton
+                right_f.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                right_b.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                left_f.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                left_b.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                //Our ticks for the motors
+
+                right_f.setTargetPosition(ticks);
+                right_b.setTargetPosition(ticks);
+                left_f.setTargetPosition(ticks);
+                left_b.setTargetPosition(ticks);
+
+
+                //Waiting for robot to reach position.
+                while (super.opModeIsActive()) {
+                    telemetry.addData("Ticks:", right_f.getCurrentPosition());
+                    telemetry.addData("Target:", right_f.getTargetPosition());
+                    telemetry.addData("Time elapsed:", runtime);
+                    telemetry.update();
+                    if (runtime.time() > 10) {
+                        right_f.setPower(.5);
+                        right_b.setPower(.5);
+                        left_f.setPower(.5);
+                        left_b.setPower(.5);
+                    }
+
+                    if (left_f.getCurrentPosition() > ticks) {
+                        break;
+                    }
+
+                }// end while
+
+                right_f.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                right_b.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                left_f.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                left_b.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+
+                while (super.opModeIsActive()) {
+                    Thread.sleep(10);
+                    Thread.yield();
                 }
             }
-            //Moving to the cornor vortex
-            int clicks = calcClicksForInches(110);
+        }
 
-            setALLpower(.5);
 
-            setALLposition(clicks);
 
-            while (opModeIsActive()) {
-                telemetry.addData("Target:", clicks);
-                telemetry.addData("Left Position", left_f.getCurrentPosition());
-                if (left_f.getCurrentPosition() > clicks) {
-                    break;
+        public double getcurrentheading() {
+            return AngleUnit.DEGREES.normalize(imu.getAngularOrientation()
+                    .toAxesReference(AxesReference.INTRINSIC).toAxesOrder(AxesOrder.ZYX).firstAngle);
+
+        }
+
+        public static double calculateDelta(double targetheading, double currentheading) {
+            double ih =  AngleUnit.DEGREES.normalize(targetheading);
+            double ch =  AngleUnit.DEGREES.normalize(currentheading);
+
+            return   AngleUnit.DEGREES.normalize(ih - ch);
+        }
+
+
+        public void turnimu(double turnangle) {
+            double initialHeading = getcurrentheading();
+
+            double targetAngle = initialHeading + turnangle;
+            targetAngle = AngleUnit.DEGREES.normalize(targetAngle);
+            telemetry.addData("heading", initialHeading);
+            telemetry.update();
+
+            right_f.setPower(.10);
+            right_b.setPower(.10);
+            left_f.setPower(-.10);
+            left_b.setPower(-.10);
+
+            while (super.opModeIsActive()) {
+
+                double currentHeading = getcurrentheading();
+                double delta = calculateDelta(targetAngle,currentHeading);
+                telemetry.addData("initial", initialHeading);
+                telemetry.addData("heading", currentHeading);
+                telemetry.addData("target", targetAngle);
+                telemetry.addData("delta", delta);
+                telemetry.update();
+                right_f.setPower(Math.signum(delta)*-.10);
+                right_b.setPower(Math.signum(delta)*-.10);
+                left_f.setPower(Math.signum(delta)*.10);
+                left_b.setPower(Math.signum(delta)*.10);
+                if (Math.abs(delta) < 2) {
+                    right_f.setPower(0);
+                    right_b.setPower(0);
+                    left_f.setPower(0);
+                    left_b.setPower(0);
+                    return;
+
                 }
             }
-            //Turning
-            Turn(45,.5,false);
-            //Moving up the cornor vortex
-            clicks = calcClicksForInches(25);
 
-            setALLpower(.5);
 
-            setALLposition(clicks);
-
-            while (opModeIsActive()) {
-                telemetry.addData("Target:", clicks);
-                telemetry.addData("Left Position", left_f.getCurrentPosition());
-                if (left_f.getCurrentPosition() > clicks) {
-                    break;
-                }
-            }
-
-            break;
         }
 
     }
 
-    public void Turn(int degrees, double speed,boolean direction) {
-        /*
-        I am acutally really proud of myself for this method.
-        This method moves the robot a certain amount of degrees.
-        //True  = Counter-Clockwise
-        //False = Clockwise
-        */
-        ticks = (degrees*13);   //In reality is is 13.44, but
-        //everything needs to be in integers.
 
-        //This took a lot of time to come up with one number
-        //Just saying.
-
-
-        if (direction){         //Going counter-clockwise
-            setALLposition(ticks);
-
-            left_b.setPower(-speed);
-            left_f.setPower(-speed);
-            right_b.setPower(speed);
-            right_f.setPower(speed);
-
-        } else { //Going clockwise
-            setALLposition(ticks);
-
-            left_f.setPower(speed);
-            left_b.setPower(speed);
-            right_f.setPower(-speed);
-            right_b.setPower(-speed);
-        }
-        while (true) {
-            telemetry.addData("CurrentPos",left_f.getCurrentPosition());
-            if ((left_f.getCurrentPosition() - ticks) < 5){
-                break;
-            }
-        }
-
-
-    }
-    private int calcClicksForInches(double distanceInInches) {
-        //Currently there are 1120 different positions on any given wheel
-        double revlutions = distanceInInches / (wheelDiameterInInches * Math.PI); //Find out how many revolutations
-        int clicks = (int) (revlutions * tpr); //This is a pretty big number, gonna be in the 1,000's
-        return clicks; //The position to set the wheels to.
-    }
-    public void moveToPosition(int distanceInIN,double power){
-        setALLposition(calcClicksForInches(distanceInIN));
-        setALLpower(power);
-        while (true){
-            if (left_f.getCurrentPosition() > calcClicksForInches(distanceInIN)){
-                break;
-            }
-        }
-    }
-    public void setALLpower(double power){
-        left_b.setPower(power);
-        left_f.setPower(power);
-        right_b.setPower(power);
-        right_f.setPower(power);
-    }
-    public void setALLposition(int position) {
-        left_b.setTargetPosition(position);
-        left_f.setTargetPosition(position);
-        right_b.setTargetPosition(position);
-        right_f.setTargetPosition(position);
-
-    }
-}

@@ -2,6 +2,7 @@ package org.firstinspires.ftc.team9374;
 
 import android.graphics.Path;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -9,6 +10,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
  * Created by darwin on 12/4/16.
  */
 @TeleOp(name = "encoder calib")
+@Disabled
 public class Encoder_Callib extends OpMode {
 
     Hardware9374 robot = new Hardware9374();

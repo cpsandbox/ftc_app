@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.team9374;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -12,7 +13,9 @@ import com.qualcomm.robotcore.util.Range;
  * Created by darwin on 10/29/16.
  */
 @TeleOp(name = "Exponent drive", group = "null")
-//@Disabled0
+@Disabled
+//Backstory is that this is acutally more complicated than it acutally seems.
+
 public class NineK_MainBotT_Potential extends OpMode {
     //Drivin
     DcMotor left_f;
