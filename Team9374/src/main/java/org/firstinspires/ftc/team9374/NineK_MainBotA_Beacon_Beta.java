@@ -7,8 +7,8 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 /**
  * Created by darwin on 12/17/16.
  */
-@Autonomous(name = "NineK_MainBotA_Beacon_B")
-public class NineK_MainBotA_Beacon_B extends LinearOpMode {
+@Autonomous(name = "NineK_MainBotA_Beacon_Beta")
+public class NineK_MainBotA_Beacon_Beta extends LinearOpMode {
     Hardware9374 robot = new Hardware9374();
 
     int foo;
@@ -65,6 +65,18 @@ public class NineK_MainBotA_Beacon_B extends LinearOpMode {
 
             } //End of the while (true)
 
+            //moving us in front of the 2nd beacon
+            robot.Turn(0,.1);
+            robot.resetEncoders();
+
+            robot.moveToPosition(29,.3);
+            robot.resetEncoders();
+
+            robot.Turn(315,.1);
+            robot.resetEncoders();
+
+            robot.moveToPosition(16, .2);
+            robot.resetEncoders();
 
             break;
         }

@@ -99,6 +99,7 @@ public class NineK_MainBotT extends OpMode {
         telemetry.addData("Left trigger", lTrigger);
         telemetry.addData("Robot Red:",robot.CSensor.red());
         telemetry.addData("Robot blue",robot.CSensor.blue());
+        telemetry.addData("Heading", robot.getcurrentheading());
 
     }
 }
