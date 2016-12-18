@@ -213,12 +213,20 @@ public class Hardware9374 {
         setALLposition(calcClicksForInches(distanceInIN));
         setALLpower(power);
         while (true){
-            if (left_f.getCurrentPosition() > calcClicksForInches(distanceInIN)){
-                resetEncoders();
-                setALLpower(0);
+            if (calcClicksForInches(distanceInIN) < 0) {
+                if (left_f.getCurrentPosition() < calcClicksForInches(distanceInIN)) {
+                    resetEncoders();
+                    setALLpower(0);
 
-                break;
-            }
+                    break;
+                }
+            } else if (calcClicksForInches(distanceInIN) > 0)
+                if (left_f.getCurrentPosition() > calcClicksForInches(distanceInIN)){
+                    resetEncoders();
+                    setALLpower(0);
+
+                    break;
+                }
         }
     }
     public void translate(boolean direction, double power, int inches){
@@ -296,7 +304,7 @@ public class Hardware9374 {
     public void resetEncoders(){
         setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
-        setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        setMode(DcMotor.RunMode.RUN_TO_POSITION);
     }
 
     public double getcurrentheading() {
