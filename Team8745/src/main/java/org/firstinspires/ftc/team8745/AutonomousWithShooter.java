@@ -36,7 +36,7 @@ public class AutonomousWithShooter extends LinearOpMode {
 
     final double kServoNullPosition = 0.8;
     final double kServoRange = 0.6;
-    final double kShooterEnginePower = 1.0;
+    final double kShooterEnginePower = .7;
 
 
     private int ticsForInches(double inches){
@@ -60,6 +60,8 @@ public class AutonomousWithShooter extends LinearOpMode {
 
         //servos
         shooterServo = hardwareMap.servo.get("shooter-servo");
+
+        //Core device
 
         //Running with encoder
         shooterRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
