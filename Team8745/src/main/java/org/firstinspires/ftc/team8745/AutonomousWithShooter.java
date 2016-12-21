@@ -28,6 +28,8 @@ public class AutonomousWithShooter extends LinearOpMode {
     DcMotor shooterLeft;
     DcMotor shooterRight;
 
+    DcMotor ball_pickup;
+
     Servo shooterServo;
 
     public ElapsedTime runtime = new ElapsedTime();
@@ -61,6 +63,8 @@ public class AutonomousWithShooter extends LinearOpMode {
         //servos
         shooterServo = hardwareMap.servo.get("shooter-servo");
 
+        //ball pickup system
+        ball_pickup = hardwareMap.dcMotor.get("motor-pickup");
         //Core device
 
         //Running with encoder
@@ -85,7 +89,8 @@ public class AutonomousWithShooter extends LinearOpMode {
         shooterLeft.setDirection(DcMotorSimple.Direction.REVERSE);
         //servos in Up position
         shooterServo.setPosition(kServoNullPosition + kServoRange);
-
+        //ball pickup direction
+        ball_pickup.setDirection(DcMotorSimple.Direction.REVERSE);
         runtime.reset();
     }
 
@@ -108,7 +113,8 @@ public class AutonomousWithShooter extends LinearOpMode {
             return;
         }
         */
-
+        //activate ball pick up system
+        ball_pickup.setPower(1);
         // Shoot Loaded Balls
         shooterRight.setPower(kShooterEnginePower);
         shooterLeft.setPower(kShooterEnginePower);

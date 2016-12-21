@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.Range;
 
@@ -25,6 +26,7 @@ public class TankDriveShooter extends OpMode {
     DcMotor right_b;
     DcMotor shooterLeft;
     DcMotor shooterRight;
+    DcMotor ball_pickup;
     Servo shooterServo;
     double speedFactor;
     long lastTime = System.currentTimeMillis();
@@ -42,14 +44,16 @@ public class TankDriveShooter extends OpMode {
         right_f = hardwareMap.dcMotor.get("motor-right");
 
         //Back Motors
-        left_b = hardwareMap.dcMotor.get("motor-leftBACK");
-        right_b = hardwareMap.dcMotor.get("motor-rightBACK");
+        left_b = hardwareMap.dcMotor.get("motor-leftBack");
+        right_b = hardwareMap.dcMotor.get("motor-rightBack");
 
         //Shooters
         shooterRight = hardwareMap.dcMotor.get("shooter-right");
         shooterLeft = hardwareMap.dcMotor.get("shooter-left");
         //Servos
         shooterServo = hardwareMap.servo.get("shooter-servo");
+        //ball pickup system
+        ball_pickup = hardwareMap.dcMotor.get("motor-pickup");
 
 
         //Reverse Mode
@@ -59,6 +63,7 @@ public class TankDriveShooter extends OpMode {
         shooterRight.setDirection(DcMotorSimple.Direction.FORWARD);
         shooterLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         shooterRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        ball_pickup.setDirection(DcMotorSimple.Direction.REVERSE);
         // speed factor
         speedFactor = 1.0;
     }
@@ -122,6 +127,9 @@ public class TankDriveShooter extends OpMode {
         left_f.setPower(gamepad1.left_stick_y);
         right_b.setPower(gamepad1.right_stick_y);
         right_f.setPower(gamepad1.right_stick_y);
+
+        ball_pickup.setPower(gamepad2.left_trigger);
+
 
     }
 }
