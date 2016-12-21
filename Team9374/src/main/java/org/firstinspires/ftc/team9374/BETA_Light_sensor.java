@@ -21,7 +21,6 @@ public class BETA_Light_sensor extends LinearOpMode {
 
     Hardware9374 robot = new Hardware9374();
     public void runOpMode() throws InterruptedException{
-        robot.init(hardwareMap);
 
         robot.moveToPosition(61,.7);
 

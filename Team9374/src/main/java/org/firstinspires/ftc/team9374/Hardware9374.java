@@ -10,6 +10,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
@@ -45,6 +46,7 @@ public class Hardware9374 {
 
     ColorSensor CSensor;
 
+    Telemetry telemetry;
     //Controller vaibles
     double lStickY;
     double lStickX;
@@ -70,8 +72,9 @@ public class Hardware9374 {
     public Hardware9374() {
     }
     //Our init, cannot be called inside the begginning because it is finding our devices.
-    public void init(HardwareMap hardwareMap) {
+    public void init(HardwareMap hardwareMap, Telemetry telemetry) {
 
+        this.telemetry = telemetry;
         //Driving motors
         left_f = hardwareMap.dcMotor.get("Eng1-left");
         right_f = hardwareMap.dcMotor.get("Eng1-right");
@@ -192,6 +195,7 @@ public class Hardware9374 {
             right_f.setPower(-speed);
             //Heading will be in 160
             heading = getcurrentheading();
+            telemetry.addData("Heading:", heading);
             if (heading < target + 5 && heading > target -5) { //Should be withen 10 of the target.
                 break;
             }

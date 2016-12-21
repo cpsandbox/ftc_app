@@ -16,7 +16,7 @@ public class Encoder_Callib extends OpMode {
     Hardware9374 robot = new Hardware9374();
 
     public void init() {
-        robot.init(hardwareMap);
+        //robot.init(hardwareMap);
 
     }
     public void loop(){

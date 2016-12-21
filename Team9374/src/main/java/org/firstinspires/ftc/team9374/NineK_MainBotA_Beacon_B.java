@@ -33,7 +33,7 @@ public class NineK_MainBotA_Beacon_B extends LinearOpMode {
 
             robot.resetEncoders();
             //Move to beacon
-            robot.moveToPosition(48, .3);
+            robot.moveToPosition(48, .4);
 
             robot.resetEncoders();
 
@@ -43,7 +43,7 @@ public class NineK_MainBotA_Beacon_B extends LinearOpMode {
                 robot.waitNSeconds(1);
                 if (robot.CSensor.blue() > 4) {
 
-                    robot.moveToPosition(-15, -.3);
+                    robot.moveToPosition(-15, -.4);
 
                     robot.resetEncoders();
 
@@ -51,7 +51,7 @@ public class NineK_MainBotA_Beacon_B extends LinearOpMode {
 
                     break;
                 } else  {
-                    robot.moveToPosition(-15, -.3);
+                    robot.moveToPosition(-15, -.4);
                     robot.resetEncoders();
 
                     robot.setMode(DcMotor.RunMode.RUN_TO_POSITION);
