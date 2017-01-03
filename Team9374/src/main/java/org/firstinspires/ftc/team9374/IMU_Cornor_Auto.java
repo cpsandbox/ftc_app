@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.team9374.team9374;
+package org.firstinspires.ftc.team9374;
 
 import com.qualcomm.hardware.adafruit.BNO055IMU;
 import com.qualcomm.hardware.adafruit.JustLoggingAccelerationIntegrator;
