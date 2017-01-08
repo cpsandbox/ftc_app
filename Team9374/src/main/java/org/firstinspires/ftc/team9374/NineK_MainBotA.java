@@ -24,7 +24,7 @@ public class NineK_MainBotA extends LinearOpMode {
 
     public void runOpMode() throws InterruptedException {
 
-        robot.init(hardwareMap);
+        robot.init(hardwareMap, telemetry);
         robot.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         super.waitForStart();
 

@@ -33,7 +33,7 @@ public class NineK_MainBotA_Cornor_B extends LinearOpMode{
             //--------------------------------------------------------------------------------------
             //Bunch of Robot Initilaztion code
             //--------------------------------------------------------------------------------------
-            robot.init(hardwareMap);
+            robot.init(hardwareMap,telemetry);
 
             // Wait until we're told to go
             waitForStart();

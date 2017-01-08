@@ -57,9 +57,13 @@ public class Hardware9374 {
     double LBpower;
     double RBpower;
 
+    BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
+
+
     final double wheelDiameterInInches = 4;
     final int tpr = 1120;
     final double wheelCorrection = 0;
+    final int Color_level = 3;
     //Not yet defined, will be.
 
     int ticks;
@@ -76,11 +80,11 @@ public class Hardware9374 {
 
         this.telemetry = telemetry;
         //Driving motors
-        left_f = hardwareMap.dcMotor.get("Eng1-left");
-        right_f = hardwareMap.dcMotor.get("Eng1-right");
+        right_b = hardwareMap.dcMotor.get("Eng1-left");  //Was left_f
+        left_b = hardwareMap.dcMotor.get("Eng1-right");//Was Right_f
 
-        left_b = hardwareMap.dcMotor.get("Eng2-left");
-        right_b = hardwareMap.dcMotor.get("Eng2-right");
+        right_f = hardwareMap.dcMotor.get("Eng2-left");  //Was left_b
+        left_f = hardwareMap.dcMotor.get("Eng2-right");//Was right_b
         //Shooter motors
         shooter_r = hardwareMap.dcMotor.get("Eng3-left");
         shooter_l = hardwareMap.dcMotor.get("Eng3-right");
@@ -132,7 +136,6 @@ public class Hardware9374 {
         //--------------------------------------------------------------------------------------
         //IMU code
         //--------------------------------------------------------------------------------------
-        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
         parameters.angleUnit           = BNO055IMU.AngleUnit.DEGREES;               // Defining units
         parameters.accelUnit           = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;  // Defining units
         parameters.calibrationDataFile = "AdafruitIMUCalibration.json"; // see the calibration sample opmode
@@ -193,9 +196,9 @@ public class Hardware9374 {
             left_f.setPower(speed);
             right_b.setPower(-speed);
             right_f.setPower(-speed);
-            //Heading will be in 160
+
             heading = getcurrentheading();
-            telemetry.addData("Heading:", heading);
+            telemetry.addData("Current Heading:", heading);
             if (heading < target + 5 && heading > target -5) { //Should be withen 10 of the target.
                 break;
             }
@@ -335,5 +338,8 @@ public class Hardware9374 {
 
         }
     }
-
+    public void reset_imu(){
+        //Should reset the encoder. Has not been tested.
+        imu.initialize(parameters);
+    }
 }

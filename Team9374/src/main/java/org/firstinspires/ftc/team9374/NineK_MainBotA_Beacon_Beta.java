@@ -16,7 +16,7 @@ public class NineK_MainBotA_Beacon_Beta extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
-        robot.init(hardwareMap);
+        robot.init(hardwareMap, telemetry);
 
         waitForStart();
 
@@ -41,7 +41,7 @@ public class NineK_MainBotA_Beacon_Beta extends LinearOpMode {
                 telemetry.addLine("Made it to loop");
                 robot.setMode(DcMotor.RunMode.RUN_TO_POSITION);
                 robot.waitNSeconds(1);
-                if (robot.CSensor.blue() > 4) {
+                if (robot.CSensor.blue() > robot.Color_level) {
 
                     robot.moveToPosition(-15, -.3);
 
@@ -50,7 +50,7 @@ public class NineK_MainBotA_Beacon_Beta extends LinearOpMode {
                     robot.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
                     break;
-                } else  {
+                } else if (robot.CSensor.red() > robot.Color_level) {
                     robot.moveToPosition(-15, -.3);
                     robot.resetEncoders();
 
@@ -61,23 +61,29 @@ public class NineK_MainBotA_Beacon_Beta extends LinearOpMode {
 
                     robot.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
+                } else {
+                    //If we dont see anything.
+                    robot.moveToPosition(-15, -.3);
+
+                    robot.resetEncoders();
                 }
 
             } //End of the while (true)
 
+            robot.reset_imu();
             //moving us in front of the 2nd beacon
-            robot.Turn(0,.1);
+            robot.Turn(90,.1);
             robot.resetEncoders();
 
             robot.moveToPosition(29,.3);
             robot.resetEncoders();
 
-            robot.Turn(315,.1);
+            robot.Turn(0,.1);
             robot.resetEncoders();
 
             robot.moveToPosition(16, .2);
             robot.resetEncoders();
-
+            //Shouldnt Get to the beacon, but be in front of it.
             break;
         }
     }

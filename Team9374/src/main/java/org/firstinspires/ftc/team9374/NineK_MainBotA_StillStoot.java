@@ -15,7 +15,7 @@ public class NineK_MainBotA_StillStoot extends LinearOpMode {
 
     public void runOpMode() throws InterruptedException {
 
-        robot.init(hardwareMap);
+        robot.init(hardwareMap,telemetry);
         super.waitForStart();
 
         robot.moveToPosition(5,-.4);

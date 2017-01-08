@@ -16,9 +16,9 @@ public class Encoder_Callib extends OpMode {
     Hardware9374 robot = new Hardware9374();
 
     public void init() {
-        //robot.init(hardwareMap);
-
+        robot.init(hardwareMap, telemetry);
     }
+
     public void loop(){
         double lStickY = gamepad1.left_stick_y;
         double rSticky = gamepad1.right_stick_y;
@@ -32,11 +32,9 @@ public class Encoder_Callib extends OpMode {
         if (gamepad1.a) {
             robot.resetEncoders();
         }
-
-        telemetry.addData("Left Back position",robot.left_b.getCurrentPosition());
-        telemetry.addData("Left Front position",robot.left_f.getCurrentPosition());
-        telemetry.addData("Right Back position",robot.right_b.getCurrentPosition());
-        telemetry.addData("Right Front position",robot.right_f.getCurrentPosition());
+        if (gamepad1.y){
+            robot.reset_imu();
+        }
 
         telemetry.addData("Color sensor value (R)", robot.CSensor.red());
         telemetry.addData("Color sensor value (B)", robot.CSensor.blue());

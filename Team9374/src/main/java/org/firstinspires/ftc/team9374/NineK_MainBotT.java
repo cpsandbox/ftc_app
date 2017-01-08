@@ -24,7 +24,7 @@ public class NineK_MainBotT extends OpMode {
 
     public void init()  {
         //Driving motors
-    robot.init(hardwareMap);
+    robot.init(hardwareMap,telemetry);
 
     }
 

@@ -16,7 +16,7 @@ public class NineK_MainBotA_Beacon_B extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
-        robot.init(hardwareMap);
+        robot.init(hardwareMap, telemetry);
 
         waitForStart();
 

@@ -45,6 +45,8 @@ public class IMU_8745 extends LinearOpMode {
 
     Servo shooterServo;
 
+    BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
+
 
     public ElapsedTime runtime = new ElapsedTime();
 
@@ -105,8 +107,6 @@ public class IMU_8745 extends LinearOpMode {
 
 
 
-
-        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
         parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
         parameters.accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
         parameters.calibrationDataFile = "AdafruitIMUCalibration.json"; // see the calibration sample opmode
@@ -349,6 +349,7 @@ public class IMU_8745 extends LinearOpMode {
         }
 
     }
+
 
 }
 
