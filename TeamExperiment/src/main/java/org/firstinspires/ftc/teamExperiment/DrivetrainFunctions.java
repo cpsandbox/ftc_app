@@ -244,7 +244,7 @@ public class DrivetrainFunctions {
 
         while (opmode.opModeIsActive()) {
             double delta = calculateDelta(targetHeading, getCurrentHeading(robot.getIMU()));
-            if (Math.abs(delta) > 1) {
+            if (Math.abs(delta) < 1) {
                 break;
             }
             double power = Math.abs(delta / degreesRequest);
