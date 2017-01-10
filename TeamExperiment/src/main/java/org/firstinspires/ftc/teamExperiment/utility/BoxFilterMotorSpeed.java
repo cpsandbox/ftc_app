@@ -14,6 +14,7 @@ import java.util.Arrays;
  */
 public class BoxFilterMotorSpeed {
 
+
     private DcMotor[] motors = null;
     private long[][] motorReadings;
     private long[] timings;
@@ -94,3 +95,4 @@ public class BoxFilterMotorSpeed {
     }
 
 }
+

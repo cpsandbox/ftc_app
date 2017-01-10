@@ -12,18 +12,18 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 @Disabled
 @TeleOp(name="Katamari One")
 public class Arcade_Drive_Katamari extends OpMode {
-    DcMotor leftFRONT;
+    DcMotor left_f;
     DcMotor rightFRONT;
     DcMotor leftBACK;
     DcMotor rightBACK;
     Boolean switcher = false;
     // Will switch with every loop using this boolean, hopefully
     public void init() {
-        leftFRONT = hardwareMap.dcMotor.get("motor-left");
+        left_f = hardwareMap.dcMotor.get("motor-left");
         rightFRONT = hardwareMap.dcMotor.get("motor-right");
         leftBACK = hardwareMap.dcMotor.get("motor-leftBACK");
         rightBACK = hardwareMap.dcMotor.get("motor-rightBACK");
-        leftFRONT.setDirection(DcMotorSimple.Direction.REVERSE);
+        left_f.setDirection(DcMotorSimple.Direction.REVERSE);
         leftBACK.setDirection(DcMotorSimple.Direction.REVERSE);
 
     }
@@ -40,7 +40,7 @@ public class Arcade_Drive_Katamari extends OpMode {
         // Other Stuff
 
         if (switcher = true) {
-            leftFRONT.setPower(left_stick_y);
+            left_f.setPower(left_stick_y);
             rightFRONT.setPower(left_stick_y);
         }
 
@@ -48,7 +48,7 @@ public class Arcade_Drive_Katamari extends OpMode {
 
     if(left_stick_x>0) {
         if (switcher = false){
-            leftFRONT.setPower(left_stick_x);
+            left_f.setPower(left_stick_x);
             rightFRONT.setPower(-left_stick_x);
         } }
 
@@ -56,7 +56,7 @@ public class Arcade_Drive_Katamari extends OpMode {
 
     if(left_stick_x<0){
         if (switcher == false){
-            leftFRONT.setPower(-left_stick_x);
+            left_f.setPower(-left_stick_x);
             rightFRONT.setPower(left_stick_x);
         } }
 
@@ -64,27 +64,27 @@ public class Arcade_Drive_Katamari extends OpMode {
 
     if(left_stick_y==0) {
         if (left_stick_x < 0){
-            leftFRONT.setPower(-left_stick_x);
+            left_f.setPower(-left_stick_x);
             rightFRONT.setPower(left_stick_x);
         }
         else {
-            leftFRONT.setPower (left_stick_x);
+            left_f.setPower (left_stick_x);
             rightFRONT.setPower (-left_stick_x);
         } }
 
     if(switcher = true) {
-        leftFRONT.setPower(left_stick_y);
+        left_f.setPower(left_stick_y);
         rightFRONT.setPower(left_stick_y);
         switcher = false;}
 
 // If no x input (for emergency zooming forward
     if (left_stick_x==0){
         rightFRONT.setPower(left_stick_y);
-        leftFRONT.setPower (left_stick_y);}
+        left_f.setPower (left_stick_y);}
 
     //Back Wheels
     rightBACK.setPower(rightFRONT.getPower());
-    leftBACK.setPower(leftFRONT.getPower());
+    leftBACK.setPower(left_f.getPower());
 
 
 }}
