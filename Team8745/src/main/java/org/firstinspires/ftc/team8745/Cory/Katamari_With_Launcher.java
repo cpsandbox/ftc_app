@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.team8745;
+package org.firstinspires.ftc.team8745.Cory;
 
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
