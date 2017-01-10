@@ -26,7 +26,7 @@ public abstract class BaseLinearOp extends LinearOpMode {
     protected static final double WHEEL_DIAMETER_IN = 9.325/Math.PI;
     //protected static final double WHEEL_DIAMETER_IN = 12.4/Math.PI; mechanum
     //protected static final double WHEEL_CIRCUMFERENCE_MM = 314.96; mechanum
-    protected static final double WHEEL_CIRCUMFERENCE_MM = 236.855;
+    protected static final double WHEEL_CIRCUMFERENCE_MM = 236.855; // small wheels
 
     protected static final double MAX_TURNING_POWER = .5;
     protected static final double MIN_TURNING_POWER = .05;
@@ -394,7 +394,7 @@ public abstract class BaseLinearOp extends LinearOpMode {
         while (super.opModeIsActive()) {
 
             double delta = calculateDelta(targetHeading, getCurrentHeading());
-            if (Math.abs(delta) > 1) {
+            if (Math.abs(delta) < 1) {
                 break;
             }
             double power = Math.abs(delta/degreesRequest);
