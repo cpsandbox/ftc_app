@@ -179,7 +179,7 @@ public abstract class BaseLinearOp extends LinearOpMode {
     }
 
     /**
-     * @author Corey
+     * @author Cory
      * @param inches
      * @return the ticks to target to moe this many inches
      */
