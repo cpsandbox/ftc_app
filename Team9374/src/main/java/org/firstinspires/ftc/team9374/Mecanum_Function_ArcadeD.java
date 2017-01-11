@@ -4,6 +4,7 @@ package org.firstinspires.ftc.team9374;
  * Created by darwin on 11/30/16.
  */
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -15,7 +16,7 @@ import com.qualcomm.robotcore.util.Range;
  */
 
 @TeleOp(name="Mecahnim_DriveV2", group="Normal_Opmode")
-
+@Disabled
 public class Mecanum_Function_ArcadeD extends OpMode {
     DcMotor left_f;
     DcMotor right_f;

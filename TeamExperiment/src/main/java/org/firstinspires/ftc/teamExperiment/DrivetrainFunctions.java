@@ -23,7 +23,7 @@ public class DrivetrainFunctions {
     static final double WHEEL_DIAMETER = 4;
 
     static final double MAX_TURNING_POWER = .5;
-    static final double MIN_TURNING_POWER = .05;
+    static final double MIN_TURNING_POWER = .1;
 
 
     /**
@@ -241,15 +241,22 @@ public class DrivetrainFunctions {
     public static void turnIMU(double degreesRequest, LinearOpMode opmode, Hardware robot) {
         double initialHeading = getCurrentHeading(robot.getIMU());
         double targetHeading = normalize(initialHeading + degreesRequest);
+        double lastSign = Math.signum(1);
+        int switches = 0;
+        final long startTime = System.currentTimeMillis();
+        final long waitLimit = 5000;
 
         while (opmode.opModeIsActive()) {
             double delta = calculateDelta(targetHeading, getCurrentHeading(robot.getIMU()));
-            if (Math.abs(delta) < 1) {
+            if (Math.abs(delta) < .25) {
+                setMotorPower(0, robot.getLeftMotors());
+                setMotorPower(0, robot.getRightMotors());
                 break;
             }
             double power = Math.abs(delta / degreesRequest);
-            power = Range.clip(power, MAX_TURNING_POWER, MIN_TURNING_POWER);
-            setMotorPower(power * Math.signum(delta), robot.getLeftMotors());
+            power = power*power;
+            power = Range.clip(power, MIN_TURNING_POWER,MAX_TURNING_POWER );
+            setMotorPower(-power * Math.signum(delta), robot.getLeftMotors());
             setMotorPower(power * Math.signum(delta), robot.getRightMotors());
         }
     }

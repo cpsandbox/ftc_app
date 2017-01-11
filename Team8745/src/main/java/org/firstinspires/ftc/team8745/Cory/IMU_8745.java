@@ -1,14 +1,16 @@
-package org.firstinspires.ftc.team8745;
+package org.firstinspires.ftc.team8745.Cory;
 
 import com.qualcomm.hardware.adafruit.BNO055IMU;
 import com.qualcomm.hardware.adafruit.JustLoggingAccelerationIntegrator;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.Acceleration;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
@@ -18,9 +20,9 @@ import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 /**
  * Created by SuperSneasel12 on 11/21/16.
  */
-@Autonomous(name = "IMU_8745FirstRed")
+@Autonomous(name = "IMU_8745First")
 
-public class IMU_8745RED extends LinearOpMode {
+public class IMU_8745 extends LinearOpMode {
 
     BNO055IMU imu;
 
@@ -151,7 +153,6 @@ public class IMU_8745RED extends LinearOpMode {
             shooterServo.setPosition((kServoNullPosition + (-kServoRange)));
             waitNSeconds(1);
             shooterServo.setPosition(kServoNullPosition);
-
             int ticks = ticsForInches(22);
 
             //Run to posiiton
@@ -191,14 +192,14 @@ public class IMU_8745RED extends LinearOpMode {
             left_f.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             left_b.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-            turnimu(90);
+            turnimu(-90);
 
             //////end turning//
             right_f.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             right_b.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             left_f.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             left_b.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            ticks = ticsForInches(30);
+            ticks = ticsForInches(28);
 
             //Run to posiiton
             right_f.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -238,7 +239,7 @@ public class IMU_8745RED extends LinearOpMode {
             left_b.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 ///////// turn 45
 
-            turnimu(45);
+            turnimu(-45);
 
             //////end turning//
 
@@ -248,7 +249,7 @@ public class IMU_8745RED extends LinearOpMode {
             right_b.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             left_f.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             left_b.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            ticks = ticsForInches(24);
+            ticks = ticsForInches(30);
 
             //Run to posiiton
             right_f.setMode(DcMotor.RunMode.RUN_TO_POSITION);

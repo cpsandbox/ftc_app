@@ -98,12 +98,6 @@ public class AutonomousNoMoveWithShooter extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
         initmybot();
         waitForStart();
-        /*
-        if (!opModeIsActive()){
-            stop();
-            return;
-        }
-        */
 
         // Shoot Loaded Balls
         shooterRight.setPower(kShooterEnginePower);

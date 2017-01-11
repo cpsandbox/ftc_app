@@ -1,3 +1,4 @@
+package org.firstinspires.ftc.team9374;
 /*
 Copyright (c) 2016 Robert Atkinson
 
@@ -31,8 +32,6 @@ TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-package org.firstinspires.ftc.team9374;
-
 import com.qualcomm.hardware.adafruit.AdafruitBNO055IMU;
 import com.qualcomm.hardware.adafruit.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
@@ -55,6 +54,7 @@ import java.io.File;
 import java.util.Locale;
 
 /**
+ * {} calibrates the IMU accelerometer per
  * "Section 3.11 Calibration" of the BNO055 specification.
  *
  * <p>Manual calibration of the IMU is definitely NOT necessary: except for the magnetometer
@@ -106,14 +106,14 @@ import java.util.Locale;
  * @see <a href="https://ae-bst.resource.bosch.com/media/_tech/media/datasheets/BST_BNO055_DS000_14.pdf">BNO055 specification</a>
  */
 @TeleOp(name = "Sensor: Adafruit IMU Calibration", group = "Sensor")
-// Uncomment this to add to the opmode list
-public class IMU_Calabration extends LinearOpMode {
+                            // Uncomment this to add to the opmode list
+public class IMU_Calabration extends LinearOpMode
+{
     //----------------------------------------------------------------------------------------------
     // State
     //----------------------------------------------------------------------------------------------
 
     // Our sensors, motors, and other devices go here, along with other long term state
-
     BNO055IMU imu;
 
     // State used for updating telemetry
@@ -133,7 +133,7 @@ public class IMU_Calabration extends LinearOpMode {
         telemetry.log().add("");
         telemetry.log().add("When sufficient calibration has been reached,");
         telemetry.log().add("press the 'A' button to write the current");
-        telemetry.log().add("calibration data to a file" );
+        telemetry.log().add("calibration data to a file.");
         telemetry.log().add("");
 
         // We are expecting the IMU to be attached to an I2C port on a Core Device Interface Module and named "imu".

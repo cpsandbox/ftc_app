@@ -1,12 +1,20 @@
 package org.firstinspires.ftc.team9374;
 
+import com.qualcomm.hardware.adafruit.BNO055IMU;
+import com.qualcomm.hardware.adafruit.JustLoggingAccelerationIntegrator;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.I2cAddr;
 import com.qualcomm.robotcore.util.ElapsedTime;
+
+import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 
 /**
  * Created by darwin on 12/3/16.
@@ -37,8 +45,11 @@ public class Hardware9374 {
 
     CRServo elevator;
 
-    ColorSensor CSensor;
+    ColorSensor CSensorL;
 
+    ColorSensor CSensorR;
+
+    Telemetry telemetry;
     //Controller vaibles
     double lStickY;
     double lStickX;
@@ -49,41 +60,107 @@ public class Hardware9374 {
     double LBpower;
     double RBpower;
 
-    final double wheelDiameterInInches = 2.5;
+
+    BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
+
+
+    final double wheelDiameterInInches = 4;
     final int tpr = 1120;
     final double wheelCorrection = 0;
+    final int Color_level = 3;
     //Not yet defined, will be.
 
     int ticks;
+
+    BNO055IMU imu;
 
     public ElapsedTime runTime = new ElapsedTime();
 
     /* constructor, used when ... = new Hardware9374()  */
     public Hardware9374() {
     }
-    //Our init, cannot be called inside the begginning because it is finding our devices.
-    public void init(HardwareMap hardwareMap) {
 
+    //Our init, cannot be called inside the begginning because it is finding our devices.
+    public void init(HardwareMap hardwareMap, Telemetry telemetry) {
+
+        this.telemetry = telemetry;
         //Driving motors
-        left_f = hardwareMap.dcMotor.get("Eng1-left");
-        right_f = hardwareMap.dcMotor.get("Eng1-right");
-        left_b = hardwareMap.dcMotor.get("Eng2-left");
-        right_b = hardwareMap.dcMotor.get("Eng2-right");
+        right_b = hardwareMap.dcMotor.get("Eng1-left");  //Was left_f
+        left_b = hardwareMap.dcMotor.get("Eng1-right");//Was Right_f
+
+        right_f = hardwareMap.dcMotor.get("Eng2-left");  //Was left_b
+        left_f = hardwareMap.dcMotor.get("Eng2-right");//Was right_b
         //Shooter motors
         shooter_r = hardwareMap.dcMotor.get("Eng3-left");
         shooter_l = hardwareMap.dcMotor.get("Eng3-right");
 
         elevator = hardwareMap.crservo.get("Ser1-center");
 
-        CSensor = hardwareMap.colorSensor.get("Col1-right");
+        CSensorL = hardwareMap.colorSensor.get("Col1-left");
+        CSensorR = hardwareMap.colorSensor.get("Col1-right");
 
-        //This might not be true for all motors on the right side
-        right_b.setDirection(DcMotorSimple.Direction.REVERSE);
+        //We need to make different addressess because the Sensor are communicating on the same bus.
+        CSensorR.setI2cAddress(I2cAddr.create7bit(0x3c));
+        CSensorL.setI2cAddress(I2cAddr.create7bit(0x70));
+
+        CSensorL.enableLed(false);
+        CSensorR.enableLed(false);
+
+        //center = hardwareMap.servo.get("Ser1-center");
+
+        //Might be deprecated
+        left_b.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        right_f.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        right_b.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        left_f.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        left_f.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        right_f.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        left_b.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        right_b.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        /*
+        left_b.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        right_f.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        right_b.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        left_f.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        */
         right_f.setDirection(DcMotorSimple.Direction.REVERSE);
-
-        //shooter_r.setDirection(DcMotorSimple.Direction.REVERSE);
+        right_b.setDirection(DcMotorSimple.Direction.REVERSE);
 
         //shooter_l.setDirection(DcMotorSimple.Direction.REVERSE);
+
+        shooter_r.setDirection(DcMotorSimple.Direction.REVERSE);
+
+        elevator.setPower(1);
+
+        runTime.reset();
+
+        //left.setDirection(DcMotorSimple.Direction.REVERSE);//Or .FORWARD
+        //--------------------------------------------------------------------------------------
+        //End of Robot init code.
+        //--------------------------------------------------------------------------------------
+
+        // Set up the parameters with which we will use our IMU. Note that integration
+        // algorithm here just reports accelerations to the logcat log; it doesn't actually
+        // provide positional information.
+
+        //--------------------------------------------------------------------------------------
+        //IMU code
+        //--------------------------------------------------------------------------------------
+        parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;               // Defining units
+        parameters.accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;  // Defining units
+        parameters.calibrationDataFile = "AdafruitIMUCalibration.json"; // see the calibration sample opmode
+        parameters.loggingEnabled = true;
+        parameters.loggingTag = "IMU";
+        parameters.accelerationIntegrationAlgorithm = new JustLoggingAccelerationIntegrator();
+
+        // Retrieve and initialize the IMU. We expect the IMU to be attached to an I2C port
+        // on a Core Device Interface Module, configured to be a sensor of type "AdaFruit IMU",
+        // and named "imu".
+        imu = hardwareMap.get(BNO055IMU.class, "imu");
+        imu.initialize(parameters);
+
+        // Set up our telemetry dashboard
 
         runTime.reset();
 
@@ -93,8 +170,9 @@ public class Hardware9374 {
     //-------------------------------------------------------
 
 
-
-    public void Turn(int degrees, double speed,boolean direction) {
+    public void Turn(int THeading, double speed) {
+        //Stands for THeading
+        //EX: change = 90 and speed is 0.
         /*
         I am acutally really proud of myself for this method.
         This method moves the robot a certain amount of degrees.
@@ -103,60 +181,75 @@ public class Hardware9374 {
         //False = Clockwise
         //-------------------------
         */
-        ticks = (degrees*13);   //In reality is is 13.44, but
         //everything needs to be in integers.
 
         //This took a lot of time to come up with one number
         //Just saying.
 
+        left_b.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        right_f.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        right_b.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        left_f.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-        if (direction){         //Going counter-clockwise
-            setALLposition(ticks);
+        double heading = getcurrentheading(); //38
 
-            left_b.setPower(-speed);
-            left_f.setPower(-speed);
-            right_b.setPower(speed);
-            right_f.setPower(speed);
+        double target = heading + THeading;
 
-        } else { //Going clockwise
-            setALLposition(ticks);
-
-            left_f.setPower(speed);
-            left_b.setPower(speed);
-            right_f.setPower(-speed);
-            right_b.setPower(-speed);
+        //Making shure that the target is not over 360
+        if (target > 360) {
+            target = target - 360;
         }
+
         while (true) {
-            //telemetry.addData("CurrentPos",left_f.getCurrentPosition());
-            //Might need to find a way to get that done.
-            if ((left_f.getCurrentPosition() - ticks) < 5){
-                setALLpower(0);
-                resetEncoders();
+            //Not going to bother to do this logic
+            left_b.setPower(speed);
+            left_f.setPower(speed);
+            right_b.setPower(-speed);
+            right_f.setPower(-speed);
+
+            heading = getcurrentheading();
+            telemetry.addData("Current Heading:", heading);
+            if (heading < target + 5 && heading > target - 5) { //Should be withen 10 of the target.
                 break;
             }
         }
 
+        left_b.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        right_f.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        right_b.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        left_f.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
     }
+
     public int calcClicksForInches(double distanceInInches) {
         //Currently there are 1120 different positions on any given wheel
         double revlutions = distanceInInches / (wheelDiameterInInches * Math.PI); //Find out how many revolutations
         int clicks = (int) (revlutions * tpr); //This is a pretty big number, gonna be in the 1,000's
         return clicks; //The position to set the wheels to.
     }
-    public void moveToPosition(int distanceInIN,double power){
+
+    public void moveToPosition(double distanceInIN, double power) {
         setALLposition(calcClicksForInches(distanceInIN));
         setALLpower(power);
-        while (true){
-            if (left_f.getCurrentPosition() > calcClicksForInches(distanceInIN)){
-                resetEncoders();
-                setALLpower(0);
+        while (true) {
+            if (calcClicksForInches(distanceInIN) < 0) {
+                if (left_f.getCurrentPosition() < calcClicksForInches(distanceInIN)) {
+                    resetEncoders();
+                    setALLpower(0);
 
-                break;
-            }
+                    break;
+                }
+            } else if (calcClicksForInches(distanceInIN) > 0)
+                if (left_f.getCurrentPosition() > calcClicksForInches(distanceInIN)) {
+                    resetEncoders();
+                    setALLpower(0);
+
+                    break;
+                }
         }
     }
-    public void translate(boolean direction, double power, int inches){
+
+    public void translate(boolean direction, double power, int inches) {
         //Currently not finished, need to confirm with camden.
         //-------------------------
         //True  = Left
@@ -207,7 +300,7 @@ public class Hardware9374 {
             right_b.setPower(power);
         }
         while (true) {
-            if (left_f.getCurrentPosition() > calcClicksForInches(inches)){
+            if (left_f.getCurrentPosition() > calcClicksForInches(inches)) {
                 resetEncoders();
                 break;
             }
@@ -215,12 +308,14 @@ public class Hardware9374 {
 
 
     }
-    public void setALLpower(double power){
+
+    public void setALLpower(double power) {
         left_b.setPower(power);
         left_f.setPower(power);
         right_b.setPower(power);
         right_f.setPower(power);
     }
+
     public void setALLposition(int position) {
         left_b.setTargetPosition(position);
         left_f.setTargetPosition(position);
@@ -228,17 +323,70 @@ public class Hardware9374 {
         right_f.setTargetPosition(position);
 
     }
-    public void resetEncoders(){
-        left_b.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        left_f.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        right_b.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        right_f.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
-        left_b.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        left_f.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        right_b.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        right_f.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+    public void resetEncoders() {
+        setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        setMode(DcMotor.RunMode.RUN_TO_POSITION);
+    }
+
+    public double getcurrentheading() {
+        double angles;
+        angles = AngleUnit.DEGREES.normalize(imu.getAngularOrientation()
+                .toAxesReference(AxesReference.INTRINSIC).toAxesOrder(AxesOrder.ZYX).firstAngle);
+        //If its negetive then subtract
+        if (angles < 0) {
+            angles = 360 + angles;
+        }
+        return angles;
 
     }
 
+    public void setMode(DcMotor.RunMode mode) {
+        left_b.setMode(mode);
+        left_f.setMode(mode);
+        right_b.setMode(mode);
+        right_f.setMode(mode);
+    }
+
+    public void waitNSeconds(int secondsToWait) {
+        double startTime = runTime.time();
+        while (runTime.time() - startTime < secondsToWait) {
+
+        }
+    }
+
+    public void reset_imu() {
+        //Should reset the encoder. Has not been tested.
+        imu.initialize(parameters);
+    }
+
+    public int Color_Case() {
+        //Im going to do this by a number basis.
+        // 2 = red
+        // 1 = blue
+        // 0 =  unknown
+        if ((CSensorL.red() > Color_level) & (CSensorR.red() > Color_level)) {
+            return 22;
+        } else if (CSensorL.red() > Color_level & CSensorR.blue() > Color_level) {
+            return 21;
+        } else if (CSensorL.blue() > Color_level & CSensorR.blue() > Color_level) {
+            return 11;
+        } else if (CSensorL.blue() < Color_level & CSensorL.red() < Color_level & CSensorR.blue() > Color_level) {
+            return 00;
+        } else if (CSensorL.blue() > Color_level & CSensorR.blue() < Color_level & CSensorR.red() < Color_level) {
+            return 10;
+        } else if (CSensorL.blue() < Color_level & CSensorL.red() < Color_level & CSensorR.blue() > Color_level) {
+            return 01;
+        } else if (CSensorL.red() > Color_level & CSensorR.red() < Color_level & CSensorR.blue() < Color_level) {
+            return 20;
+        } else if (CSensorL.blue() > Color_level & CSensorR.red() > Color_level) {
+            return 12;
+        } else if (CSensorL.blue() < Color_level & CSensorL.red() < Color_level & CSensorR.red() > Color_level) {
+            return 02;
+        } else {
+            return 0;
+        }
+
+    }
 }

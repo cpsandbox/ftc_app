@@ -14,7 +14,7 @@ public class JustDrive extends BaseLinearOp{
 
         waitForStart();
         while(opModeIsActive()){
-            super.tankDrive(-gamepad1.left_stick_y, -gamepad1.right_stick_y);
+            super.squaredTankDrive(-gamepad1.left_stick_y, -gamepad1.right_stick_y);
         }
     }
 }

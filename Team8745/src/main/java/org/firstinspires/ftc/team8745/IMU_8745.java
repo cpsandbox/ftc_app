@@ -45,13 +45,15 @@ public class IMU_8745 extends LinearOpMode {
 
     Servo shooterServo;
 
+    BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
+
 
     public ElapsedTime runtime = new ElapsedTime();
 
 
     final double kServoNullPosition = 0.8;
     final double kServoRange = 0.6;
-    final double kShooterEnginePower = 0.65;
+    final double kShooterEnginePower = 1.0;
 
     private int ticsForInches(double inches) {
         return (int) ((inches * TICS_PER_REV) / (Math.PI * WHEEL_DIAMETER));
@@ -94,7 +96,7 @@ public class IMU_8745 extends LinearOpMode {
         right_b.setDirection(DcMotorSimple.Direction.FORWARD);
         left_f.setDirection(DcMotorSimple.Direction.REVERSE);
         left_b.setDirection(DcMotorSimple.Direction.REVERSE);
-//////////shooting direction
+            //////////shooting direction
         shooter_l.setDirection(DcMotorSimple.Direction.REVERSE);
         shooter_r.setDirection(DcMotorSimple.Direction.FORWARD);
         //servos in Up position
@@ -105,8 +107,6 @@ public class IMU_8745 extends LinearOpMode {
 
 
 
-
-        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
         parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
         parameters.accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
         parameters.calibrationDataFile = "AdafruitIMUCalibration.json"; // see the calibration sample opmode
@@ -149,10 +149,7 @@ public class IMU_8745 extends LinearOpMode {
             shooterServo.setPosition((kServoNullPosition + (-kServoRange)));
             waitNSeconds(1);
             shooterServo.setPosition(kServoNullPosition);
-            waitNSeconds(1);
-            shooterServo.setPosition((kServoNullPosition + (-kServoRange)));
-            waitNSeconds(1);
-            shooterServo.setPosition(kServoNullPosition);
+
             int ticks = ticsForInches(22);
 
             //Run to posiiton
@@ -199,7 +196,7 @@ public class IMU_8745 extends LinearOpMode {
             right_b.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             left_f.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             left_b.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            ticks = ticsForInches(28);
+            ticks = ticsForInches(34);
 
             //Run to posiiton
             right_f.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -249,7 +246,7 @@ public class IMU_8745 extends LinearOpMode {
             right_b.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             left_f.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             left_b.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            ticks = ticsForInches(30);
+            ticks = ticsForInches(24);
 
             //Run to posiiton
             right_f.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -352,6 +349,7 @@ public class IMU_8745 extends LinearOpMode {
         }
 
     }
+
 
 }
 

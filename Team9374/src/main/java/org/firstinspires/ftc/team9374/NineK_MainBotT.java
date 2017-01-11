@@ -1,7 +1,12 @@
 package org.firstinspires.ftc.team9374;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.CRServo;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
@@ -15,9 +20,11 @@ public class NineK_MainBotT extends OpMode {
     Hardware9374 robot = new Hardware9374();
     public ElapsedTime runTime = new ElapsedTime();
 
+    double gear = 1;
+
     public void init()  {
         //Driving motors
-    robot.init(hardwareMap);
+    robot.init(hardwareMap,telemetry);
 
     }
 
@@ -26,9 +33,8 @@ public class NineK_MainBotT extends OpMode {
         //All Driving code//
         //Driver
 
-        double lStickY = gamepad1.left_stick_y;
-        double lStickX = gamepad1.left_stick_x;
-        double rStickY = gamepad1.right_stick_y;
+        double lStickY = -gamepad1.left_stick_y;
+        double rStickY = -gamepad1.right_stick_y;
 
         //Operator
         double rTrigger = gamepad2.right_trigger;
@@ -36,38 +42,44 @@ public class NineK_MainBotT extends OpMode {
         boolean lBumper = gamepad2.left_bumper;
         boolean rBumper = gamepad2.right_bumper;
 
-        double LFpower;
-        double LBpower;
-        double RFpower;
-        double RBpower;
+
+
+        boolean A = gamepad1.a;
+        boolean B = gamepad1.b;
+        boolean Y = gamepad1.y;
 
         //left.setDirection(DcMotorSimple.Direction.REVERSE);//Or .FORWARD
         //Mecahnim wheels
 
-
-
-        LFpower = lStickY + lStickX - rStickY;
-        LBpower = lStickY - lStickX - rStickY;
-
-        RFpower = lStickY - lStickX + rStickY;
-        RBpower = lStickY + lStickX + rStickY;
-
-        robot.left_f.setPower(Range.clip(LFpower,-1,1));
-        robot.right_f.setPower(Range.clip(RFpower,-1,1));
-        robot.left_b.setPower(Range.clip(LBpower,-1,1));
-        robot.right_b.setPower(Range.clip(RBpower,-1,1));
-
         //End of Mechanim wheel
-        rTrigger = Range.clip(rTrigger,0.5,1);
         //Controlls right side
-        lTrigger = lTrigger/-5 + 0.5;          //Controlls left side
-        /*
-        if (rTrigger > 0.5){
-            elevator.setPower(rTrigger);
-        } else if (lTrigger > 0){
-            elevator.getPower(lTrigger);
+
+        //RTrigger is same, 0 and 1.
+        lTrigger = lTrigger*-1;
+        //Should default to 0 and 1
+
+        //Only thig is that this assumes ltrugger is less than 1, which it should be
+        if (A) {            //A is back to normal speed
+            gear = 1;
+            //Just for ease of controll. Not have to go back and forth.
+        } else if (B) {     //B is 2nd to last gear
+            gear = .3;
+        } else if (Y) {
+            gear = .2;      //Y is last gear, or slowest strength.
         }
-        */
+        //------Verible driving-------//
+
+        robot.left_f.setPower(lStickY*gear);
+        robot.left_b.setPower(lStickY*gear);
+
+        robot.right_f.setPower(rStickY*gear);
+        robot.right_b.setPower(rStickY*gear);
+
+        //------Verible driving-------//
+
+
+
+
         robot.elevator.setPower(gamepad2.left_stick_y);
         //Shooter code
 
@@ -78,13 +90,16 @@ public class NineK_MainBotT extends OpMode {
         }
 
         if (rBumper)   {
-            robot.shooter_r.setPower(-1);
+            robot.shooter_r.setPower(1);
         } else {
             robot.shooter_r.setPower(0);
         }
-
-
-
+        telemetry.addData("Elevator", robot.elevator.getPower());
+        telemetry.addData("Right trigger", rTrigger);
+        telemetry.addData("Left trigger", lTrigger);
+        telemetry.addData("Robot Red:",robot.CSensor.red());
+        telemetry.addData("Robot blue",robot.CSensor.blue());
+        telemetry.addData("Heading", robot.getcurrentheading());
 
     }
 }

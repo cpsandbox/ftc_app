@@ -22,6 +22,8 @@ import java.util.Locale;
  * Created by darwin on 11/21/16.
  */
 @Autonomous(name = "Sensor: Adafruit IMU")
+
+//Currently disabled due to bug on phones.
 public class IMU_Telemetry_Test extends LinearOpMode{
 
     /**

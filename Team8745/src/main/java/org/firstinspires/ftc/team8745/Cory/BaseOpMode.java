@@ -1,4 +1,4 @@
-package  org.firstinspires.ftc.team8745;
+package org.firstinspires.ftc.team8745.Cory;
 
 import com.qualcomm.hardware.adafruit.BNO055IMU;
 import com.qualcomm.hardware.adafruit.JustLoggingAccelerationIntegrator;
@@ -6,10 +6,12 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
+import org.firstinspires.ftc.team8745.Servo;
+
 import java.util.Arrays;
 
-public abstract class BaseLinearOp extends LinearOpMode {
-    static final int TICS_PER_REV = 1120;
+public abstract class BaseOpMode extends LinearOpMode {
+/*    static final int TICS_PER_REV = 1120;
     static final double WHEEL_DIAMETER = 4;
 
     static final double MAX_TURNING_POWER = .5;
@@ -78,5 +80,5 @@ void initIMU() {
 void initServo(){
     Servo = hardwareMap.servo.get("");
 }
-
+*/
 }
