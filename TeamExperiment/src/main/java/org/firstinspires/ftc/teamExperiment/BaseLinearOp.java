@@ -29,7 +29,7 @@ public abstract class BaseLinearOp extends LinearOpMode {
     protected static final double WHEEL_CIRCUMFERENCE_MM = 236.855; // small wheels
 
     protected static final double MAX_TURNING_POWER = .5;
-    protected static final double MIN_TURNING_POWER = .05;
+    protected static final double MIN_TURNING_POWER = .1;
 
     private DcMotor frontLeftMotor = null;
     private DcMotor frontRightMotor = null;
@@ -167,6 +167,7 @@ public abstract class BaseLinearOp extends LinearOpMode {
         parameters.loggingTag = "IMU";
         parameters.accelerationIntegrationAlgorithm = new JustLoggingAccelerationIntegrator();
 
+
         // Retrieve and initialize the IMU. We expect the IMU to be attached to an I2C port
         // on a Core Device Interface Module, configured to be a sensor of type "AdaFruit IMU",
         // and named "imu".
@@ -288,6 +289,16 @@ public abstract class BaseLinearOp extends LinearOpMode {
      * @param left
      * @param right
      */
+    public void slowableTankDrive(double left, double right, boolean slow){
+        setMotorPower(Range.clip(left* (slow?.5:1), -1,1), leftMotors );
+        setMotorPower(Range.clip(right* (slow?.5:1), -1,1), rightMotors);
+    }
+
+    /**
+     * Set the correct motor mode before calling this
+     * @param left
+     * @param right
+     */
     protected void squaredTankDrive(double left, double right){
         setMotorPower(Range.clip(Math.signum(left)*left*left, -1,1), leftMotors);
         setMotorPower(Range.clip(Math.signum(right)*right*right, -1,1), rightMotors);
@@ -388,26 +399,43 @@ public abstract class BaseLinearOp extends LinearOpMode {
      */
     protected void turnIMU(double degreesRequest) {
         telemetry.addData("starting turn", degreesRequest);
+        telemetry.update();
         double initialHeading = getCurrentHeading();
         double targetHeading = normalize(initialHeading + degreesRequest);
+        double lastSign = Math.signum(1);
+        int switches = 0;
+        final long startTime = System.currentTimeMillis();
+        final long waitLimit = 5000; //5 seconds
 
         while (super.opModeIsActive()) {
 
             double delta = calculateDelta(targetHeading, getCurrentHeading());
-            if (Math.abs(delta) < 1) {
+            if( Math.signum(delta) != lastSign){
+                switches++;
+                lastSign = Math.signum(delta);
+            }
+
+
+            if (switches > 6 || Math.abs(delta) < .25 || (System.currentTimeMillis() -startTime > waitLimit)) {
+                setMotorPower(0, leftMotors);
+                setMotorPower(0, rightMotors);
                 break;
             }
             double power = Math.abs(delta/degreesRequest);
-            power = Range.clip(power, MAX_TURNING_POWER, MIN_TURNING_POWER);
-            setMotorPower(power * Math.signum(delta), leftMotors);
-            setMotorPower(-power * Math.signum(delta), rightMotors);
+            telemetry.addData("pct", power);
+            power = power*power;
+            power = Range.clip(power, MIN_TURNING_POWER,MAX_TURNING_POWER );
+            setMotorPower(-power * Math.signum(delta), leftMotors);
+            setMotorPower(power * Math.signum(delta), rightMotors);
             telemetry.addData("initial", initialHeading);
             telemetry.addData("target", targetHeading);
             telemetry.addData("delta", delta);
             telemetry.addData("power", power);
+            telemetry.update();
         }
 
-        telemetry.addData("ended turn", degreesRequest);
+        //telemetry.addData("ended turn", degreesRequest);
+        //telemetry.update();
     }
 
 

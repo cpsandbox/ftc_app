@@ -19,6 +19,7 @@ public class Turns extends BaseLinearOp {
 
         ClickyButton X = new ClickyButton(gamepad1, GamepadButton.X);
         ClickyButton B = new ClickyButton(gamepad1, GamepadButton.B);
+        ClickyButton A = new ClickyButton(gamepad1, GamepadButton.A);
 
         while(super.opModeIsActive()){
 
@@ -33,6 +34,14 @@ public class Turns extends BaseLinearOp {
                 telemetry.update();
                 super.turnIMU(-90);
             }
+
+            if( A.buttonClicked()){
+                telemetry.addLine("A");
+                telemetry.update();
+                super.turnIMU(180);
+            }
+
+
         }
 
     }
